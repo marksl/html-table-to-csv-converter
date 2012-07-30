@@ -53,11 +53,8 @@ namespace ConsoleApplication1
                 {
                     bool first = true;
 
-                    //for (int i = 0; i < tr.ChildNodes.Count - 1; i++)
                     foreach(var node in tr.ChildNodes)
                     {
-                        //HtmlNode node = tr.ChildNodes[i];
-
                         if (node.Name != "td")
                             continue;
 
@@ -83,9 +80,11 @@ namespace ConsoleApplication1
                 else if (current == State.Items)
                 {
                     bool first = true;
-                    for (int i = 0; i < tr.ChildNodes.Count - 1; i++)
+                    foreach (var node in tr.ChildNodes)
                     {
-                        HtmlNode node = tr.ChildNodes[i];
+                        if (node.Name != "td")
+                            continue;
+
                         if (first)
                         {
                             nextLine.Add(node.InnerText);
@@ -108,24 +107,25 @@ namespace ConsoleApplication1
                 else if (current == State.Students)
                 {
                     bool first = true;
-                    foreach (HtmlNode td in tr.Descendants("td"))
+                    foreach (var node in tr.ChildNodes)
                     {
+                        if (node.Name != "td")
+                            continue;
+
                         if (first)
                         {
-                            nextLine.Add(td.InnerText);
+                            nextLine.Add(node.InnerText);
 
                             first = false;
                         }
                         else
                         {
-                            string[] parts = td.Attributes["title"].Value
+                            string[] parts = node.Attributes["title"].Value
                                 .Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
 
                             nextLine.Add(parts[0].Split(':')[1]);
                             nextLine.Add(parts[1].Split(':')[1]);
                             
-                            //nextLine.Add(td.Attributes["title"].Value.Replace(",", " -"));
-
                             if (ViewedSolution(parts))
                             {
                                 nextLine.Add("true");
